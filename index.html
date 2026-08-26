@@ -6,6 +6,15 @@
 <title>Amit Bikram Roy — Portfolio</title>
 <meta name="description" content="Amit Bikram Roy — Computer Vision & Deep Learning researcher, ML Engineering Intern at FlyRank.AI." />
 
+<!-- theme init — runs before first paint to avoid a flash of the wrong theme -->
+<script>
+  (function () {
+    var stored = localStorage.getItem('theme');
+    var isDark = stored ? stored === 'dark' : true; // default to dark, matching the site's original identity
+    if (isDark) document.documentElement.classList.add('dark');
+  })();
+</script>
+
 <!-- Tailwind CSS via CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -14,13 +23,16 @@
     theme: {
       extend: {
         colors: {
-          bg: '#0a0e14',
-          surface: '#10151f',
-          surface2: '#151b27',
-          border: '#232b3a',
-          accent: '#22d3ee',
-          accent2: '#818cf8',
-          muted: '#8b96a8',
+          bg: 'rgb(var(--color-bg) / <alpha-value>)',
+          surface: 'rgb(var(--color-surface) / <alpha-value>)',
+          surface2: 'rgb(var(--color-surface2) / <alpha-value>)',
+          border: 'rgb(var(--color-border) / <alpha-value>)',
+          accent: 'rgb(var(--color-accent) / <alpha-value>)',
+          accent2: 'rgb(var(--color-accent2) / <alpha-value>)',
+          lime: 'rgb(var(--color-accent-solid) / <alpha-value>)',
+          muted: 'rgb(var(--color-muted) / <alpha-value>)',
+          ink: 'rgb(var(--color-ink) / <alpha-value>)',
+          ink2: 'rgb(var(--color-ink2) / <alpha-value>)',
         },
         fontFamily: {
           sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
@@ -34,70 +46,157 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
-  html { background-color: #0a0e14; }
+  /* ---- palette: Acid Lime Noir — true neutrals + one vivid lime accent ---- */
+  :root {
+    --color-bg: 250 250 248;       /* #FAFAF8 warm near-white */
+    --color-surface: 255 255 255;
+    --color-surface2: 245 245 242;
+    --color-border: 222 222 214;   /* neutral warm gray */
+    --color-accent: 92 138 0;      /* #5C8A00 deepened olive-lime, for legible text/links on light bg */
+    --color-accent2: 150 160 120;  /* muted sage, decorative only */
+    --color-accent-solid: 159 239 0; /* #9FEF00 fixed vivid lime, used for button fills in both themes */
+    --color-muted: 91 91 84;
+    --color-ink: 22 22 19;
+    --color-ink2: 51 51 46;
+
+    --glass-bg: rgba(15,15,10,0.03);
+    --glass-border: rgba(15,15,10,0.10);
+    --glass-shadow: 0 8px 24px -10px rgba(20,20,15,0.14), inset 0 1px 0 0 rgba(255,255,255,0.6);
+    --glass-hover-bg: rgba(15,15,10,0.05);
+    --glass-hover-border: rgba(92,138,0,0.45);
+    --glass-nav-bg: rgba(250,250,248,0.7);
+    --glass-pill-bg: rgba(15,15,10,0.03);
+    --glass-pill-border: rgba(15,15,10,0.12);
+    --scrollbar-track: 250 250 248;
+    --scrollbar-thumb: 210 210 202;
+  }
+  .dark {
+    --color-bg: 17 17 17;          /* #111111 true near-black */
+    --color-surface: 24 24 22;
+    --color-surface2: 30 30 27;
+    --color-border: 44 44 40;
+    --color-accent: 159 239 0;     /* #9FEF00 vivid lime, legible on near-black */
+    --color-accent2: 120 130 90;   /* muted dim olive, decorative only */
+    --color-accent-solid: 159 239 0;
+    --color-muted: 158 158 150;
+    --color-ink: 237 237 232;
+    --color-ink2: 197 197 190;
+
+    --glass-bg: rgba(255,255,255,0.045);
+    --glass-border: rgba(255,255,255,0.09);
+    --glass-shadow: 0 8px 30px -8px rgba(0,0,0,0.45), inset 0 1px 0 0 rgba(255,255,255,0.06);
+    --glass-hover-bg: rgba(255,255,255,0.075);
+    --glass-hover-border: rgba(159,239,0,0.5);
+    --glass-nav-bg: rgba(17,17,17,0.55);
+    --glass-pill-bg: rgba(255,255,255,0.05);
+    --glass-pill-border: rgba(255,255,255,0.1);
+    --scrollbar-track: 17 17 17;
+    --scrollbar-thumb: 44 44 40;
+  }
+
+  html { background-color: rgb(var(--color-bg)); transition: background-color .3s ease; }
   body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
   .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
-  ::selection { background: #22d3ee33; color: #e5f7fb; }
+  ::selection { background: rgba(159,239,0,0.35); }
+
+  /* glassmorphism panel */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+  }
+  .glass-hover { transition: background-color .3s ease, border-color .3s ease, box-shadow .3s ease; }
+  .glass-hover:hover {
+    background: var(--glass-hover-bg);
+    border-color: var(--glass-hover-border);
+  }
+
+  /* glass nav bar */
+  .glass-nav {
+    background: var(--glass-nav-bg);
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    border-bottom: 1px solid var(--glass-border);
+  }
+
+  /* glass pill (skill tags) */
+  .glass-pill {
+    background: var(--glass-pill-bg);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--glass-pill-border);
+  }
 
   /* subtle scroll reveal */
-  .reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity .5s ease, transform .5s ease; }
   .reveal.in { opacity: 1; transform: translateY(0); }
 
   /* nav active link underline */
   .nav-link { position: relative; }
   .nav-link::after {
     content: ""; position: absolute; left: 0; bottom: -4px; height: 1px; width: 0%;
-    background: #22d3ee; transition: width .25s ease;
+    background: rgb(var(--color-accent)); transition: width .25s ease;
   }
   .nav-link:hover::after { width: 100%; }
 
+  /* theme toggle icon swap */
+  .theme-icon-dark { display: none; }
+  .dark .theme-icon-dark { display: inline-flex; }
+  .dark .theme-icon-light { display: none; }
+
   ::-webkit-scrollbar { width: 10px; }
-  ::-webkit-scrollbar-track { background: #0a0e14; }
-  ::-webkit-scrollbar-thumb { background: #232b3a; border-radius: 999px; }
-  ::-webkit-scrollbar-thumb:hover { background: #2c364a; }
+  ::-webkit-scrollbar-track { background: rgb(var(--scrollbar-track)); }
+  ::-webkit-scrollbar-thumb { background: rgb(var(--scrollbar-thumb)); border-radius: 999px; }
 </style>
 </head>
 
-<body class="bg-bg text-slate-200 antialiased">
+<body class="bg-bg text-ink2 antialiased">
 
 <!-- ============================================================ -->
 <!-- NAVBAR                                                        -->
 <!-- ============================================================ -->
-<header class="fixed top-0 inset-x-0 z-50 border-b border-border/60 bg-bg/80 backdrop-blur-md">
+<header class="fixed top-0 inset-x-0 z-50 glass-nav">
   <nav class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-    <a href="#top" class="mono text-sm font-semibold tracking-wide text-slate-100">
+    <a href="#top" class="mono text-sm font-semibold tracking-wide text-ink">
       AB<span class="text-accent">.</span>ROY
     </a>
 
     <div class="hidden md:flex items-center gap-8 text-sm text-muted">
-      <a href="#about" class="nav-link hover:text-slate-100 transition-colors">About</a>
-      <a href="#experience" class="nav-link hover:text-slate-100 transition-colors">Experience</a>
-      <a href="#projects" class="nav-link hover:text-slate-100 transition-colors">Projects</a>
-      <a href="#publications" class="nav-link hover:text-slate-100 transition-colors">Publications</a>
-      <a href="#skills" class="nav-link hover:text-slate-100 transition-colors">Skills</a>
-      <a href="#contact" class="nav-link hover:text-slate-100 transition-colors">Contact</a>
+      <a href="#about" class="nav-link hover:text-ink transition-colors">About</a>
+      <a href="#experience" class="nav-link hover:text-ink transition-colors">Experience</a>
+      <a href="#projects" class="nav-link hover:text-ink transition-colors">Projects</a>
+      <a href="#publications" class="nav-link hover:text-ink transition-colors">Publications</a>
+      <a href="#skills" class="nav-link hover:text-ink transition-colors">Skills</a>
+      <a href="#contact" class="nav-link hover:text-ink transition-colors">Contact</a>
     </div>
 
     <div class="flex items-center gap-3">
+      <button id="themeToggle" type="button" aria-label="Toggle light/dark theme"
+        class="inline-flex items-center justify-center h-9 w-9 rounded-md glass glass-hover text-accent transition-colors">
+        <svg class="theme-icon-light h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
       <a href="cv.pdf" target="_blank" rel="noopener"
-         class="hidden sm:inline-flex items-center gap-2 rounded-md border border-accent/40 bg-accent/10 px-4 py-2 text-sm font-medium text-accent hover:bg-accent/20 hover:border-accent/70 transition-colors">
+         class="hidden sm:inline-flex items-center gap-2 rounded-md glass glass-hover px-4 py-2 text-sm font-medium text-accent transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="m6 9 6 6 6-6"/><path d="M19 21H5"/></svg>
         Open CV
       </a>
-      <button id="menuBtn" class="md:hidden p-2 text-slate-300" aria-label="Toggle menu">
+      <button id="menuBtn" class="md:hidden p-2 text-muted" aria-label="Toggle menu">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
       </button>
     </div>
   </nav>
 
   <!-- Mobile menu -->
-  <div id="mobileMenu" class="hidden md:hidden border-t border-border/60 bg-bg/95 px-6 py-4 space-y-3">
-    <a href="#about" class="block text-sm text-muted hover:text-slate-100">About</a>
-    <a href="#experience" class="block text-sm text-muted hover:text-slate-100">Experience</a>
-    <a href="#projects" class="block text-sm text-muted hover:text-slate-100">Projects</a>
-    <a href="#publications" class="block text-sm text-muted hover:text-slate-100">Publications</a>
-    <a href="#skills" class="block text-sm text-muted hover:text-slate-100">Skills</a>
-    <a href="#contact" class="block text-sm text-muted hover:text-slate-100">Contact</a>
+  <div id="mobileMenu" class="hidden md:hidden border-t border-border/30 glass-nav px-6 py-4 space-y-3">
+    <a href="#about" class="block text-sm text-muted hover:text-ink">About</a>
+    <a href="#experience" class="block text-sm text-muted hover:text-ink">Experience</a>
+    <a href="#projects" class="block text-sm text-muted hover:text-ink">Projects</a>
+    <a href="#publications" class="block text-sm text-muted hover:text-ink">Publications</a>
+    <a href="#skills" class="block text-sm text-muted hover:text-ink">Skills</a>
+    <a href="#contact" class="block text-sm text-muted hover:text-ink">Contact</a>
     <a href="cv.pdf" target="_blank" rel="noopener" class="block text-sm font-medium text-accent">Open CV ↗</a>
   </div>
 </header>
@@ -113,7 +212,7 @@
 
   <div class="max-w-6xl mx-auto">
     <p class="mono text-accent text-sm mb-4 reveal">Hi, my name is</p>
-    <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-slate-50 reveal">
+    <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-ink reveal">
       Amit Bikram Roy
     </h1>
     <h2 class="mt-3 text-2xl sm:text-3xl md:text-4xl font-bold text-muted reveal">
@@ -124,18 +223,18 @@
       Astronomy & Astrophysics. I build CNN and transformer based architectures for fine‑grained visual
       classification under data scarcity, and apply vision models to scientific imagery — from endangered
       freshwater fish to radio galaxy morphology. Currently an ML Engineering Intern at
-      <span class="text-slate-200 font-medium">FlyRank.AI</span>. Off the board — quite literally — I'm a
+      <span class="text-ink2 font-medium">FlyRank.AI</span>. Off the board — quite literally — I'm a
       FIDE‑rated national chess player of Bangladesh (rating 2049) and a verified Chess.com coach.
     </p>
 
     <div class="mt-8 flex flex-wrap items-center gap-4 reveal">
       <a href="cv.pdf" target="_blank" rel="noopener"
-         class="inline-flex items-center gap-2 rounded-md bg-accent px-5 py-3 text-sm font-semibold text-bg hover:bg-accent/90 transition-colors shadow-lg shadow-accent/20">
+         class="inline-flex items-center gap-2 rounded-md bg-lime px-5 py-3 text-sm font-semibold text-black hover:bg-lime/90 transition-colors shadow-lg shadow-lime/20">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="m6 9 6 6 6-6"/><path d="M19 21H5"/></svg>
         Open CV
       </a>
       <a href="#projects"
-         class="inline-flex items-center gap-2 rounded-md border border-border px-5 py-3 text-sm font-medium text-slate-200 hover:border-accent/50 hover:text-accent transition-colors">
+         class="inline-flex items-center gap-2 rounded-md glass glass-hover px-5 py-3 text-sm font-medium text-ink2 hover:text-accent transition-colors">
         View Projects
       </a>
       <div class="flex items-center gap-4 ml-2">
@@ -156,11 +255,11 @@
 <!-- ============================================================ -->
 <!-- ABOUT                                                         -->
 <!-- ============================================================ -->
-<section id="about" class="py-24 px-6 border-t border-border/60">
+<section id="about" class="py-24 px-6 border-t border-border/40">
   <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-10">
     <div class="reveal">
       <h3 class="mono text-accent text-sm mb-2">01 — About</h3>
-      <h2 class="text-2xl font-bold text-slate-50">Research Interests</h2>
+      <h2 class="text-2xl font-bold text-ink">Research Interests</h2>
     </div>
     <div class="md:col-span-2 space-y-5 text-muted leading-relaxed reveal">
       <p>
@@ -180,21 +279,21 @@
 
       <!-- quick facts grid -->
       <div class="grid sm:grid-cols-2 gap-4 pt-4">
-        <div class="rounded-lg border border-border bg-surface p-5">
+        <div class="glass rounded-lg p-5">
           <p class="mono text-xs text-accent mb-1">Location</p>
-          <p class="text-slate-200">Dhaka, Bangladesh</p>
+          <p class="text-ink2">Dhaka, Bangladesh</p>
         </div>
-        <div class="rounded-lg border border-border bg-surface p-5">
+        <div class="glass rounded-lg p-5">
           <p class="mono text-xs text-accent mb-1">Current Role</p>
-          <p class="text-slate-200">ML Engineering Intern, FlyRank.AI</p>
+          <p class="text-ink2">ML Engineering Intern, FlyRank.AI</p>
         </div>
-        <div class="rounded-lg border border-border bg-surface p-5">
+        <div class="glass rounded-lg p-5">
           <p class="mono text-xs text-accent mb-1">Education</p>
-          <p class="text-slate-200">B.Sc. CSE, Independent University, Bangladesh</p>
+          <p class="text-ink2">B.Sc. CSE, Independent University, Bangladesh</p>
         </div>
-        <div class="rounded-lg border border-border bg-surface p-5">
+        <div class="glass rounded-lg p-5">
           <p class="mono text-xs text-accent mb-1">Languages</p>
-          <p class="text-slate-200">Bengali (native), English (IELTS 7.0)</p>
+          <p class="text-ink2">Bengali (native), English (IELTS 7.0)</p>
         </div>
       </div>
     </div>
@@ -204,23 +303,23 @@
 <!-- ============================================================ -->
 <!-- EDUCATION                                                     -->
 <!-- ============================================================ -->
-<section id="education" class="py-24 px-6 border-t border-border/60 bg-surface/30">
+<section id="education" class="py-24 px-6 border-t border-border/40">
   <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-10">
     <div class="reveal">
       <h3 class="mono text-accent text-sm mb-2">02 — Education</h3>
-      <h2 class="text-2xl font-bold text-slate-50">Academic Background</h2>
+      <h2 class="text-2xl font-bold text-ink">Academic Background</h2>
     </div>
     <div class="md:col-span-2 reveal">
-      <div class="rounded-lg border border-border bg-surface p-6">
+      <div class="glass rounded-lg p-6">
         <div class="flex flex-wrap items-start justify-between gap-2">
           <div>
-            <h4 class="text-lg font-semibold text-slate-100">B.Sc. in Computer Science & Engineering</h4>
+            <h4 class="text-lg font-semibold text-ink">B.Sc. in Computer Science & Engineering</h4>
             <p class="text-muted text-sm mt-1">Independent University, Bangladesh (IUB), Dhaka · Minor in Astronomy & Astrophysics</p>
           </div>
           <span class="mono text-xs text-accent whitespace-nowrap">Jan 2022 – Apr 2026</span>
         </div>
         <ul class="mt-4 space-y-2 text-sm text-muted list-disc list-inside">
-          <li>CGPA: <span class="text-slate-200 font-medium">3.54 / 4.00</span> (final two semesters: 3.86 / 4.00)</li>
+          <li>CGPA: <span class="text-ink2 font-medium">3.54 / 4.00</span> (final two semesters: 3.86 / 4.00)</li>
           <li>ARROWS Full Funded Merit Scholarship, awarded on the basis of academic performance</li>
           <li>Relevant coursework: Artificial Intelligence, Digital Image Processing, Data Structures & Algorithms, Linear Algebra, Probability & Statistics, Numerical Methods, Calculus, Database Systems, OOP, Mobile Application Development</li>
         </ul>
@@ -232,18 +331,18 @@
 <!-- ============================================================ -->
 <!-- EXPERIENCE                                                    -->
 <!-- ============================================================ -->
-<section id="experience" class="py-24 px-6 border-t border-border/60">
+<section id="experience" class="py-24 px-6 border-t border-border/40">
   <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-10">
     <div class="reveal">
       <h3 class="mono text-accent text-sm mb-2">03 — Experience</h3>
-      <h2 class="text-2xl font-bold text-slate-50">Research & Professional</h2>
+      <h2 class="text-2xl font-bold text-ink">Research & Professional</h2>
     </div>
 
     <div class="md:col-span-2 space-y-6 reveal">
 
-      <div class="rounded-lg border border-border bg-surface p-6 hover:border-accent/40 transition-colors">
+      <div class="glass glass-hover rounded-lg p-6 transition-colors">
         <div class="flex flex-wrap items-start justify-between gap-2">
-          <h4 class="text-lg font-semibold text-slate-100">Machine Learning Engineering Intern</h4>
+          <h4 class="text-lg font-semibold text-ink">Machine Learning Engineering Intern</h4>
           <span class="mono text-xs text-accent whitespace-nowrap">Jul 2026 – Present</span>
         </div>
         <p class="text-muted text-sm mt-1">FlyRank.AI, Chicago, Illinois, USA (Remote)</p>
@@ -254,14 +353,14 @@
         </ul>
       </div>
 
-      <div class="rounded-lg border border-border bg-surface p-6 hover:border-accent/40 transition-colors">
+      <div class="glass glass-hover rounded-lg p-6 transition-colors">
         <div class="flex flex-wrap items-start justify-between gap-2">
-          <h4 class="text-lg font-semibold text-slate-100">Research Assistant, Computer Vision</h4>
+          <h4 class="text-lg font-semibold text-ink">Research Assistant, Computer Vision</h4>
           <span class="mono text-xs text-accent whitespace-nowrap">Sep 2025 – Jun 2026</span>
         </div>
         <p class="text-muted text-sm mt-1">FAB Lab 360, Independent University, Bangladesh · Supervisor: Dr. Md Tarek Habib</p>
         <ul class="mt-3 space-y-1.5 text-sm text-muted list-disc list-inside">
-          <li>Designed <span class="text-slate-200 font-medium">FishMorphHybridNet</span>, a 7.47M‑parameter CNN–Transformer hybrid for fine‑grained classification of 16 endangered Bangladeshi freshwater fish species, reaching 98.54% test accuracy and 0.9854 macro F1 trained entirely from random initialisation, without ImageNet pre‑training.</li>
+          <li>Designed <span class="text-ink2 font-medium">FishMorphHybridNet</span>, a 7.47M‑parameter CNN–Transformer hybrid for fine‑grained classification of 16 endangered Bangladeshi freshwater fish species, reaching 98.54% test accuracy and 0.9854 macro F1 trained entirely from random initialisation, without ImageNet pre‑training.</li>
           <li>Established a controlled eight‑architecture benchmark under a single aligned recipe — identical splits, augmentation, optimiser, schedule, precision policy and seed — isolating architecture as the only free variable; the proposed model outperformed every lightweight and heavyweight baseline, including MaxViT‑T, while using 4.07× fewer parameters.</li>
           <li>Identified shortcut learning in the strongest baseline through a Grad‑CAM audit: MaxViT‑T localised its evidence on segmentation mask borders and uniform background corners rather than on fish anatomy — a failure mode invisible to aggregate accuracy.</li>
           <li>Used Grad‑CAM comparison to justify the hybrid design over its higher‑accuracy CNN‑only ablation, showing the Transformer encoder produces continuous activation across the full anterior–posterior body axis where the convolutional arm relies on fragmented local texture anchors.</li>
@@ -270,9 +369,9 @@
         </ul>
       </div>
 
-      <div class="rounded-lg border border-border bg-surface p-6 hover:border-accent/40 transition-colors">
+      <div class="glass glass-hover rounded-lg p-6 transition-colors">
         <div class="flex flex-wrap items-start justify-between gap-2">
-          <h4 class="text-lg font-semibold text-slate-100">Undergraduate Research Assistant, Astronomy & Astrophysics</h4>
+          <h4 class="text-lg font-semibold text-ink">Undergraduate Research Assistant, Astronomy & Astrophysics</h4>
           <span class="mono text-xs text-accent whitespace-nowrap">Apr 2026 – Jul 2026</span>
         </div>
         <p class="text-muted text-sm mt-1">Center for Astronomy, Space Science & Astrophysics (CASSA), IUB · Supervisor: Dr. Khan Muhammad Bin Asad</p>
@@ -283,9 +382,9 @@
         </ul>
       </div>
 
-      <div class="rounded-lg border border-border bg-surface p-6 hover:border-accent/40 transition-colors">
+      <div class="glass glass-hover rounded-lg p-6 transition-colors">
         <div class="flex flex-wrap items-start justify-between gap-2">
-          <h4 class="text-lg font-semibold text-slate-100">Information Systems & Technology Operations Intern</h4>
+          <h4 class="text-lg font-semibold text-ink">Information Systems & Technology Operations Intern</h4>
           <span class="mono text-xs text-accent whitespace-nowrap">Apr 2023 – Aug 2023</span>
         </div>
         <p class="text-muted text-sm mt-1">Top Jeans Ltd., Dhaka, Bangladesh</p>
@@ -301,19 +400,19 @@
 <!-- ============================================================ -->
 <!-- PROJECTS                                                      -->
 <!-- ============================================================ -->
-<section id="projects" class="py-24 px-6 border-t border-border/60 bg-surface/30">
+<section id="projects" class="py-24 px-6 border-t border-border/40">
   <div class="max-w-6xl mx-auto">
     <div class="reveal mb-12">
       <h3 class="mono text-accent text-sm mb-2">04 — Projects</h3>
-      <h2 class="text-2xl font-bold text-slate-50">Research & Software Work</h2>
+      <h2 class="text-2xl font-bold text-ink">Research & Software Work</h2>
     </div>
 
-    <h4 class="reveal text-sm font-semibold text-slate-300 mb-5 uppercase tracking-wide">Research Projects</h4>
+    <h4 class="reveal text-sm font-semibold text-ink2 mb-5 uppercase tracking-wide">Research Projects</h4>
     <div class="grid sm:grid-cols-2 gap-5 mb-14 reveal">
 
-      <div class="rounded-lg border border-border bg-surface p-6 hover:border-accent/40 hover:-translate-y-0.5 transition-all">
+      <div class="glass glass-hover rounded-lg p-6 hover:-translate-y-0.5 transition-all">
         <div class="flex items-start justify-between gap-2">
-          <h5 class="font-semibold text-slate-100">Bengali & Code‑Switched Financial Fraud Detection</h5>
+          <h5 class="font-semibold text-ink">Bengali & Code‑Switched Financial Fraud Detection</h5>
           <span class="mono text-xs text-muted whitespace-nowrap">2026–Present</span>
         </div>
         <p class="text-xs text-accent mt-1">Python · XLM‑RoBERTa · mBERT · YouTube Data API</p>
@@ -324,9 +423,9 @@
         </p>
       </div>
 
-      <div class="rounded-lg border border-border bg-surface p-6 hover:border-accent/40 hover:-translate-y-0.5 transition-all">
+      <div class="glass glass-hover rounded-lg p-6 hover:-translate-y-0.5 transition-all">
         <div class="flex items-start justify-between gap-2">
-          <h5 class="font-semibold text-slate-100">Brain Tumor Detection from MRI</h5>
+          <h5 class="font-semibold text-ink">Brain Tumor Detection from MRI</h5>
           <span class="mono text-xs text-muted whitespace-nowrap">2025</span>
         </div>
         <p class="text-xs text-accent mt-1">Python · TensorFlow / Keras · VGG16</p>
@@ -336,9 +435,9 @@
         </p>
       </div>
 
-      <div class="rounded-lg border border-border bg-surface p-6 hover:border-accent/40 hover:-translate-y-0.5 transition-all">
+      <div class="glass glass-hover rounded-lg p-6 hover:-translate-y-0.5 transition-all">
         <div class="flex items-start justify-between gap-2">
-          <h5 class="font-semibold text-slate-100">Domain‑Grounded AI Tutor (RAG)</h5>
+          <h5 class="font-semibold text-ink">Domain‑Grounded AI Tutor (RAG)</h5>
           <span class="mono text-xs text-muted whitespace-nowrap">2025</span>
         </div>
         <p class="text-xs text-accent mt-1">Python · LangChain · FAISS · Streamlit</p>
@@ -348,9 +447,9 @@
         </p>
       </div>
 
-      <div class="rounded-lg border border-border bg-surface p-6 hover:border-accent/40 hover:-translate-y-0.5 transition-all">
+      <div class="glass glass-hover rounded-lg p-6 hover:-translate-y-0.5 transition-all">
         <div class="flex items-start justify-between gap-2">
-          <h5 class="font-semibold text-slate-100">Sustainable Heat Management for Dhaka</h5>
+          <h5 class="font-semibold text-ink">Sustainable Heat Management for Dhaka</h5>
           <span class="mono text-xs text-muted whitespace-nowrap">2023</span>
         </div>
         <p class="text-xs text-accent mt-1">Python · Geospatial Analysis</p>
@@ -361,12 +460,12 @@
       </div>
     </div>
 
-    <h4 class="reveal text-sm font-semibold text-slate-300 mb-5 uppercase tracking-wide">Software Projects</h4>
+    <h4 class="reveal text-sm font-semibold text-ink2 mb-5 uppercase tracking-wide">Software Projects</h4>
     <div class="grid sm:grid-cols-2 gap-5 reveal">
 
-      <div class="rounded-lg border border-border bg-surface p-6 hover:border-accent/40 hover:-translate-y-0.5 transition-all">
+      <div class="glass glass-hover rounded-lg p-6 hover:-translate-y-0.5 transition-all">
         <div class="flex items-start justify-between gap-2">
-          <h5 class="font-semibold text-slate-100">Nitya — Meditation Tracker</h5>
+          <h5 class="font-semibold text-ink">Nitya — Meditation Tracker</h5>
           <span class="mono text-xs text-muted whitespace-nowrap">2026</span>
         </div>
         <p class="text-xs text-accent mt-1">Next.js · TypeScript · Cloudflare Workers · Postgres · Redis</p>
@@ -379,9 +478,9 @@
         </a>
       </div>
 
-      <div class="rounded-lg border border-border bg-surface p-6 hover:border-accent/40 hover:-translate-y-0.5 transition-all">
+      <div class="glass glass-hover rounded-lg p-6 hover:-translate-y-0.5 transition-all">
         <div class="flex items-start justify-between gap-2">
-          <h5 class="font-semibold text-slate-100">RCM Claims QA & Audit Dashboard</h5>
+          <h5 class="font-semibold text-ink">RCM Claims QA & Audit Dashboard</h5>
           <span class="mono text-xs text-muted whitespace-nowrap">2026</span>
         </div>
         <p class="text-xs text-accent mt-1">Python · SQL · Streamlit · Plotly</p>
@@ -394,9 +493,9 @@
         </a>
       </div>
 
-      <div class="rounded-lg border border-border bg-surface p-6 hover:border-accent/40 hover:-translate-y-0.5 transition-all">
+      <div class="glass glass-hover rounded-lg p-6 hover:-translate-y-0.5 transition-all">
         <div class="flex items-start justify-between gap-2">
-          <h5 class="font-semibold text-slate-100">PGN Tree Merger</h5>
+          <h5 class="font-semibold text-ink">PGN Tree Merger</h5>
           <span class="mono text-xs text-muted whitespace-nowrap">2025</span>
         </div>
         <p class="text-xs text-accent mt-1">Python</p>
@@ -409,9 +508,9 @@
         </a>
       </div>
 
-      <div class="rounded-lg border border-border bg-surface p-6 hover:border-accent/40 hover:-translate-y-0.5 transition-all">
+      <div class="glass glass-hover rounded-lg p-6 hover:-translate-y-0.5 transition-all">
         <div class="flex items-start justify-between gap-2">
-          <h5 class="font-semibold text-slate-100">Bongo Dictionary</h5>
+          <h5 class="font-semibold text-ink">Bongo Dictionary</h5>
           <span class="mono text-xs text-muted whitespace-nowrap">2025</span>
         </div>
         <p class="text-xs text-accent mt-1">Java · SQLite</p>
@@ -430,32 +529,32 @@
 <!-- ============================================================ -->
 <!-- PUBLICATIONS                                                  -->
 <!-- ============================================================ -->
-<section id="publications" class="py-24 px-6 border-t border-border/60">
+<section id="publications" class="py-24 px-6 border-t border-border/40">
   <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-10">
     <div class="reveal">
       <h3 class="mono text-accent text-sm mb-2">05 — Publications</h3>
-      <h2 class="text-2xl font-bold text-slate-50">Papers & Presentations</h2>
+      <h2 class="text-2xl font-bold text-ink">Papers & Presentations</h2>
     </div>
 
     <div class="md:col-span-2 space-y-4 reveal">
-      <div class="rounded-lg border border-border bg-surface p-5">
+      <div class="glass rounded-lg p-5">
         <span class="inline-block text-xs font-medium text-emerald-400 bg-emerald-400/10 rounded px-2 py-0.5 mb-2">Peer Reviewed</span>
-        <p class="text-slate-200 text-sm leading-relaxed">
+        <p class="text-ink2 text-sm leading-relaxed">
           Roy, A. B., et al. <span class="italic">"Machine Vision Based Extinct Fish Recognition: Bangladeshi Freshwater Case."</span>
           Proceedings of MCT4SD 2025, Springer Lecture Notes in Networks and Systems (LNNS), Scopus indexed.
           Oral presentation, AIM Conference, Manila, Philippines, December 2025.
         </p>
       </div>
-      <div class="rounded-lg border border-border bg-surface p-5">
+      <div class="glass rounded-lg p-5">
         <span class="inline-block text-xs font-medium text-amber-400 bg-amber-400/10 rounded px-2 py-0.5 mb-2">Manuscript Completed</span>
-        <p class="text-slate-200 text-sm leading-relaxed">
+        <p class="text-ink2 text-sm leading-relaxed">
           Roy, A. B., Ghosh Nil, S., & Habib, M. T. <span class="italic">"FishMorphHybridNet: An Efficient Hybrid Architecture for
           Endangered Freshwater Fish Classification."</span> Manuscript completed; submission September 2026.
         </p>
       </div>
-      <div class="rounded-lg border border-border bg-surface p-5">
+      <div class="glass rounded-lg p-5">
         <span class="inline-block text-xs font-medium text-amber-400 bg-amber-400/10 rounded px-2 py-0.5 mb-2">Manuscript Completed</span>
-        <p class="text-slate-200 text-sm leading-relaxed">
+        <p class="text-ink2 text-sm leading-relaxed">
           Roy, A. B., et al. <span class="italic">"Detecting Financial Fraud from Bengali YouTube Comments Using
           Cross‑Lingual Transformer Models."</span> Manuscript completed; submission September 2026.
         </p>
@@ -467,58 +566,58 @@
 <!-- ============================================================ -->
 <!-- SKILLS                                                        -->
 <!-- ============================================================ -->
-<section id="skills" class="py-24 px-6 border-t border-border/60 bg-surface/30">
+<section id="skills" class="py-24 px-6 border-t border-border/40">
   <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-10">
     <div class="reveal">
       <h3 class="mono text-accent text-sm mb-2">06 — Skills</h3>
-      <h2 class="text-2xl font-bold text-slate-50">Technical Toolbox</h2>
+      <h2 class="text-2xl font-bold text-ink">Technical Toolbox</h2>
     </div>
 
     <div class="md:col-span-2 grid sm:grid-cols-2 gap-5 reveal">
-      <div class="rounded-lg border border-border bg-surface p-5">
+      <div class="glass rounded-lg p-5">
         <p class="mono text-xs text-accent mb-3">Deep Learning / ML</p>
         <div class="flex flex-wrap gap-2">
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">PyTorch</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">TensorFlow</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">Keras</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">scikit‑learn</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">CNNs</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">Transformers</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">YOLO</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">OpenCV</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">RAG / LangChain / FAISS</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">PyTorch</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">TensorFlow</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">Keras</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">scikit‑learn</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">CNNs</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">Transformers</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">YOLO</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">OpenCV</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">RAG / LangChain / FAISS</span>
         </div>
       </div>
-      <div class="rounded-lg border border-border bg-surface p-5">
+      <div class="glass rounded-lg p-5">
         <p class="mono text-xs text-accent mb-3">Scientific Computing & Data</p>
         <div class="flex flex-wrap gap-2">
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">Python</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">NumPy / Pandas</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">SQL</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">Jupyter</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">Streamlit</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">Plotly</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">Python</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">NumPy / Pandas</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">SQL</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">Jupyter</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">Streamlit</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">Plotly</span>
         </div>
       </div>
-      <div class="rounded-lg border border-border bg-surface p-5">
+      <div class="glass rounded-lg p-5">
         <p class="mono text-xs text-accent mb-3">Software Engineering</p>
         <div class="flex flex-wrap gap-2">
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">Java</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">JavaScript / Node.js</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">TypeScript</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">Next.js</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">PHP / Django</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">MySQL / MongoDB / PostgreSQL</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">Git · Linux CLI</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">Java</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">JavaScript / Node.js</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">TypeScript</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">Next.js</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">PHP / Django</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">MySQL / MongoDB / PostgreSQL</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">Git · Linux CLI</span>
         </div>
       </div>
-      <div class="rounded-lg border border-border bg-surface p-5">
+      <div class="glass rounded-lg p-5">
         <p class="mono text-xs text-accent mb-3">Astronomy</p>
         <div class="flex flex-wrap gap-2">
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">Astroquery</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">VizieR</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">VLA FIRST / NVSS</span>
-          <span class="text-xs rounded-full border border-border px-3 py-1 text-slate-300">Radio morphology classification</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">Astroquery</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">VizieR</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">VLA FIRST / NVSS</span>
+          <span class="text-xs rounded-full glass-pill px-3 py-1 text-ink2">Radio morphology classification</span>
         </div>
       </div>
     </div>
@@ -528,16 +627,16 @@
 <!-- ============================================================ -->
 <!-- AWARDS & BEYOND THE LAB                                       -->
 <!-- ============================================================ -->
-<section id="awards" class="py-24 px-6 border-t border-border/60">
+<section id="awards" class="py-24 px-6 border-t border-border/40">
   <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-10">
     <div class="reveal">
       <h3 class="mono text-accent text-sm mb-2">07 — Beyond the Lab</h3>
-      <h2 class="text-2xl font-bold text-slate-50">Awards & Chess</h2>
+      <h2 class="text-2xl font-bold text-ink">Awards & Chess</h2>
     </div>
 
     <div class="md:col-span-2 grid sm:grid-cols-2 gap-6 reveal">
       <div>
-        <p class="text-sm font-semibold text-slate-300 mb-3 uppercase tracking-wide">Awards & Honours</p>
+        <p class="text-sm font-semibold text-ink2 mb-3 uppercase tracking-wide">Awards & Honours</p>
         <ul class="space-y-2 text-sm text-muted list-disc list-inside">
           <li>ARROWS Full Funded Merit Scholarship, IUB (2022–2026)</li>
           <li>Champion, Database Project Showcase, IUB Tech Fest (2023)</li>
@@ -547,7 +646,7 @@
         </ul>
       </div>
       <div>
-        <p class="text-sm font-semibold text-slate-300 mb-3 uppercase tracking-wide">Competitive Chess</p>
+        <p class="text-sm font-semibold text-ink2 mb-3 uppercase tracking-wide">Competitive Chess</p>
         <ul class="space-y-2 text-sm text-muted list-disc list-inside">
           <li>FIDE Rated National Player of Bangladesh — rating 2049, top 14 nationally (2024)</li>
           <li>Selected for the Asian Youth Team Chess Championship</li>
@@ -567,17 +666,17 @@
 <!-- ============================================================ -->
 <!-- CONTACT                                                       -->
 <!-- ============================================================ -->
-<section id="contact" class="py-28 px-6 border-t border-border/60 bg-surface/30">
+<section id="contact" class="py-28 px-6 border-t border-border/40">
   <div class="max-w-2xl mx-auto text-center reveal">
     <h3 class="mono text-accent text-sm mb-3">08 — Contact</h3>
-    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-50">Let's talk research, code, or chess.</h2>
+    <h2 class="text-3xl sm:text-4xl font-extrabold text-ink">Let's talk research, code, or chess.</h2>
     <p class="mt-5 text-muted leading-relaxed">
       I'm always open to discussing computer vision research, collaborations, or interesting engineering
       problems. Reach out — I usually reply within a day or two.
     </p>
     <div class="mt-8 flex flex-wrap justify-center gap-4">
       <a href="mailto:contact.royamit25@gmail.com"
-         class="inline-flex items-center gap-2 rounded-md bg-accent px-6 py-3 text-sm font-semibold text-bg hover:bg-accent/90 transition-colors shadow-lg shadow-accent/20">
+         class="inline-flex items-center gap-2 rounded-md bg-lime px-6 py-3 text-sm font-semibold text-black hover:bg-lime/90 transition-colors shadow-lg shadow-lime/20">
         contact.royamit25@gmail.com
       </a>
     </div>
@@ -594,7 +693,7 @@
 <!-- ============================================================ -->
 <!-- FOOTER                                                        -->
 <!-- ============================================================ -->
-<footer class="py-8 px-6 border-t border-border/60">
+<footer class="py-8 px-6 border-t border-border/40">
   <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted">
     <p>&copy; <span id="year"></span> Amit Bikram Roy. </p>
     <a href="#top" class="hover:text-accent transition-colors">Back to top ↑</a>
@@ -608,6 +707,13 @@
   menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
   mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.add('hidden')));
 
+  // theme toggle (light/dark)
+  const themeToggle = document.getElementById('themeToggle');
+  themeToggle.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  });
+
   // footer year
   document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -620,7 +726,7 @@
         io.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.1 });
+  }, { threshold: 0, rootMargin: '0px 0px -5% 0px' });
   revealEls.forEach(el => io.observe(el));
 </script>
 
