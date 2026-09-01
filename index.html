@@ -468,14 +468,22 @@
           <h5 class="font-semibold text-ink">Nitya — Meditation Tracker</h5>
           <span class="mono text-xs text-muted whitespace-nowrap">2026</span>
         </div>
-        <p class="text-xs text-accent mt-1">Next.js · TypeScript · Cloudflare Workers · Postgres · Redis</p>
+        <p class="text-xs text-accent mt-1">TypeScript · Vite · Cloudflare Workers · D1 · R2 · Capacitor</p>
         <p class="text-sm text-muted mt-3">
-          Offline‑first progressive web app that tracks meditation sessions and streaks, with a
-          service‑worker cache, Redis‑backed reminder scheduler, and looping ambient audio.
+          Offline‑first PWA and native Android app from a single vanilla TypeScript codebase (~62KB JS,
+          19KB gzipped) — a Workbox service worker on the web, wrapped via Capacitor on Android. A fully
+          serverless stack on Cloudflare's edge: Workers for the API and site, D1 for session and streak
+          history, R2 for ambient audio and nightly backups, and per‑minute Cron Triggers driving
+          reminders through Web Push on web and native AlarmManager alarms on Android.
         </p>
-        <a href="https://nitya.amitroy257.workers.dev/" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-xs font-medium text-accent mt-3 hover:underline">
-          Live demo ↗
-        </a>
+        <div class="flex flex-wrap gap-x-4 gap-y-1 mt-3">
+          <a href="https://nitya.dailyprayer.workers.dev/" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-xs font-medium text-accent hover:underline">
+            Live demo ↗
+          </a>
+          <a href="https://github.com/amitroy257/Nitya-app/releases/tag/v1.0" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-xs font-medium text-accent hover:underline">
+            Android release ↗
+          </a>
+        </div>
       </div>
 
       <div class="glass glass-hover rounded-lg p-6 hover:-translate-y-0.5 transition-all">
